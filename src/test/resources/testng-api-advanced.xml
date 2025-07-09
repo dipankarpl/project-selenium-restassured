@@ -1,0 +1,92 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="AdvancedAPITestSuite" parallel="tests" thread-count="5">
+    <listeners>
+        <listener class-name="com.yourorg.listeners.TestListener"/>
+        <listener class-name="com.yourorg.listeners.LogListener"/>
+    </listeners>
+    
+    <test name="Advanced API Tests">
+        <parameter name="environment" value="qa"/>
+        <groups>
+            <run>
+                <include name="api"/>
+                <include name="advanced"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.yourorg.tests.api.AdvancedAPITests"/>
+        </classes>
+    </test>
+    
+    <test name="Large Dataset Tests">
+        <parameter name="environment" value="qa"/>
+        <groups>
+            <run>
+                <include name="large-dataset"/>
+                <include name="performance"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.yourorg.tests.api.AdvancedAPITests">
+                <methods>
+                    <include name="testFetchSpecificRecordFromLargeDataset"/>
+                    <include name="testComplexDataFiltering"/>
+                    <include name="testPaginationHandling"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    
+    <test name="Token Management Tests">
+        <parameter name="environment" value="qa"/>
+        <groups>
+            <run>
+                <include name="token-refresh"/>
+                <include name="authentication"/>
+                <include name="resilience"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.yourorg.tests.api.AdvancedAPITests">
+                <methods>
+                    <include name="testTokenRefreshDuringUpload"/>
+                    <include name="testAuthenticationFailureHandling"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    
+    <test name="Chained Workflow Tests">
+        <parameter name="environment" value="qa"/>
+        <groups>
+            <run>
+                <include name="chained-requests"/>
+                <include name="workflow"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.yourorg.tests.api.AdvancedAPITests">
+                <methods>
+                    <include name="testChainedAPIFlow"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    
+    <test name="Schema Validation Tests">
+        <parameter name="environment" value="qa"/>
+        <groups>
+            <run>
+                <include name="schema"/>
+                <include name="dynamic-validation"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.yourorg.tests.api.AdvancedAPITests">
+                <methods>
+                    <include name="testDynamicSchemaValidation"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>

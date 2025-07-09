@@ -1,0 +1,190 @@
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.project
+.classpath
+.settings/
+
+# Eclipse
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.loadpath
+.recommenders
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# Reports
+reports/
+allure-results/
+extent-report/
+screenshots/
+test-output/
+
+# Environment and Security
+.env
+.env.local
+.env.production
+.env.staging
+*.key
+*.pem
+*.p12
+*.jks
+credentials.properties
+
+# Test Data
+test-data/sensitive/
+test-data/production/
+
+# Browser Drivers (managed by WebDriverManager)
+drivers/
+chromedriver*
+geckodriver*
+edgedriver*
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Build artifacts
+build/
+dist/
+out/
+
+# Node.js (if using any Node tools)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Coverage reports
+coverage/
+*.lcov
+
+# JUnit results
+TEST-*.xml
+**/surefire-reports/
+**/failsafe-reports/
+
+# Performance test results
+jmeter.log
+*.jtl
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Compiled class files
+*.class
+
+# Package Files
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Virtual machine crash logs
+hs_err_pid*
+
+# IntelliJ
+.idea/
+*.iml
+out/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Spring Tool Suite
+.apt_generated
+.factorypath
+.springBeans
+.sts4-cache
+
+# Allure
+.allure/
+allure-results/
+
+# Extent Reports
+extent-reports/
+
+# Local configuration overrides
+local.properties
+local-config.properties
+
+# Sensitive test data
+sensitive/
+confidential/
+production-data/
+
+# CI/CD
+.github/workflows/secrets/
+.gitlab-ci-secrets/
+
+# Certificates
+*.crt
+*.csr
+*.der
+*.key
+*.pem
+*.p7b
+*.p7c
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.truststore

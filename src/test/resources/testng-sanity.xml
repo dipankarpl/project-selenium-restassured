@@ -1,0 +1,57 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="SanityTestSuite" parallel="tests" thread-count="2">
+    <listeners>
+        <listener class-name="com.yourorg.listeners.TestListener"/>
+        <listener class-name="com.yourorg.listeners.LogListener"/>
+    </listeners>
+    
+    <test name="UI Sanity Tests">
+        <parameter name="browser" value="chrome"/>
+        <parameter name="environment" value="qa"/>
+        <groups>
+            <run>
+                <include name="sanity"/>
+                <include name="critical"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.yourorg.tests.ui.AuthenticationTests">
+                <methods>
+                    <include name="testUserLoginFlow"/>
+                    <include name="testDirectSessionSetup"/>
+                </methods>
+            </class>
+            <class name="com.yourorg.tests.ui.NavigationTests">
+                <methods>
+                    <include name="testMainNavigation"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    
+    <test name="API Sanity Tests">
+        <parameter name="environment" value="qa"/>
+        <groups>
+            <run>
+                <include name="sanity"/>
+                <include name="api"/>
+                <include name="critical"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.yourorg.tests.api.UserServiceTest">
+                <methods>
+                    <include name="testUserAuthentication"/>
+                    <include name="testGetUserProfile"/>
+                    <include name="testCreateUser"/>
+                </methods>
+            </class>
+            <class name="com.yourorg.tests.api.PaymentServiceTest">
+                <methods>
+                    <include name="testCreatePaymentIntent"/>
+                    <include name="testGetPaymentDetails"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>

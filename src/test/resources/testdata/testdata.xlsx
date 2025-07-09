@@ -1,0 +1,6 @@
+# This would be an Excel file with test data
+# Sample structure:
+# Sheet: TestData
+# Columns: testName, username, password, email, expectedResult
+# Sheet: RegistrationData  
+# Columns: firstName, lastName, email, password, expectedResult

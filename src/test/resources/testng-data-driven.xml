@@ -1,0 +1,111 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="DataDrivenTestSuite" parallel="tests" thread-count="3">
+    <listeners>
+        <listener class-name="com.yourorg.listeners.TestListener"/>
+        <listener class-name="com.yourorg.listeners.LogListener"/>
+    </listeners>
+    
+    <test name="Data Driven UI Tests">
+        <parameter name="browser" value="chrome"/>
+        <parameter name="environment" value="qa"/>
+        <groups>
+            <run>
+                <include name="data-driven"/>
+                <include name="ui"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.yourorg.tests.ui.DataDrivenTests"/>
+        </classes>
+    </test>
+    
+    <test name="Login Data Tests">
+        <parameter name="browser" value="chrome"/>
+        <parameter name="environment" value="qa"/>
+        <groups>
+            <run>
+                <include name="data-driven"/>
+                <include name="login"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.yourorg.tests.ui.DataDrivenTests">
+                <methods>
+                    <include name="testLoginWithMultipleData"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    
+    <test name="Registration Data Tests">
+        <parameter name="browser" value="chrome"/>
+        <parameter name="environment" value="qa"/>
+        <groups>
+            <run>
+                <include name="data-driven"/>
+                <include name="registration"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.yourorg.tests.ui.DataDrivenTests">
+                <methods>
+                    <include name="testUserRegistrationWithMultipleData"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    
+    <test name="Search Data Tests">
+        <parameter name="browser" value="chrome"/>
+        <parameter name="environment" value="qa"/>
+        <groups>
+            <run>
+                <include name="data-driven"/>
+                <include name="search"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.yourorg.tests.ui.DataDrivenTests">
+                <methods>
+                    <include name="testSearchWithMultipleTerms"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    
+    <test name="JSON Data Tests">
+        <parameter name="browser" value="chrome"/>
+        <parameter name="environment" value="qa"/>
+        <groups>
+            <run>
+                <include name="data-driven"/>
+                <include name="json"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.yourorg.tests.ui.DataDrivenTests">
+                <methods>
+                    <include name="testWithJsonData"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    
+    <test name="Dynamic Data Tests">
+        <parameter name="browser" value="chrome"/>
+        <parameter name="environment" value="qa"/>
+        <groups>
+            <run>
+                <include name="data-driven"/>
+                <include name="dynamic"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.yourorg.tests.ui.DataDrivenTests">
+                <methods>
+                    <include name="testWithDynamicData"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>

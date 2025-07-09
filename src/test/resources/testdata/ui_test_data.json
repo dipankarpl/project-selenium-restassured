@@ -1,0 +1,26 @@
+{
+  "loginTest": {
+    "action": "login",
+    "username": "testuser",
+    "password": "testpass",
+    "expectedResult": "success"
+  },
+  "searchTest": {
+    "action": "search",
+    "searchTerm": "laptop",
+    "expectedResult": "success"
+  },
+  "navigationTest": {
+    "action": "navigate",
+    "targetPage": "products",
+    "expectedResult": "success"
+  },
+  "registrationTest": {
+    "action": "register",
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@example.com",
+    "password": "securepass123",
+    "expectedResult": "success"
+  }
+}

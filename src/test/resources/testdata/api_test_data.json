@@ -1,0 +1,43 @@
+[
+  {
+    "testName": "createUser",
+    "action": "create",
+    "endpoint": "/users",
+    "method": "POST",
+    "payload": {
+      "username": "testuser1",
+      "email": "testuser1@example.com",
+      "password": "testpass123"
+    },
+    "expectedStatus": 201,
+    "expectedResult": "success"
+  },
+  {
+    "testName": "getUser",
+    "action": "retrieve",
+    "endpoint": "/users/1",
+    "method": "GET",
+    "expectedStatus": 200,
+    "expectedResult": "success"
+  },
+  {
+    "testName": "updateUser",
+    "action": "update",
+    "endpoint": "/users/1",
+    "method": "PUT",
+    "payload": {
+      "username": "updateduser",
+      "email": "updated@example.com"
+    },
+    "expectedStatus": 200,
+    "expectedResult": "success"
+  },
+  {
+    "testName": "deleteUser",
+    "action": "delete",
+    "endpoint": "/users/1",
+    "method": "DELETE",
+    "expectedStatus": 204,
+    "expectedResult": "success"
+  }
+]

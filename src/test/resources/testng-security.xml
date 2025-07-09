@@ -1,0 +1,39 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="SecurityTestSuite" parallel="tests" thread-count="2">
+    <listeners>
+        <listener class-name="com.yourorg.listeners.TestListener"/>
+        <listener class-name="com.yourorg.listeners.LogListener"/>
+    </listeners>
+    
+    <test name="API Security Tests">
+        <parameter name="environment" value="qa"/>
+        <groups>
+            <run>
+                <include name="security"/>
+                <include name="critical"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.yourorg.tests.api.SecurityTests"/>
+        </classes>
+    </test>
+    
+    <test name="Payment Security Tests">
+        <parameter name="environment" value="qa"/>
+        <groups>
+            <run>
+                <include name="security"/>
+                <include name="payment"/>
+                <include name="pci"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.yourorg.tests.api.PaymentServiceTest">
+                <methods>
+                    <include name="testPaymentSecurity"/>
+                    <include name="testPaymentDataSecurity"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>

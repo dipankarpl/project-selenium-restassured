@@ -1,157 +1,65 @@
-# Advanced Test Automation Framework
+# Test Automation Framework
 
-A comprehensive, enterprise-grade test automation framework built with Java, Selenium, TestNG, and RestAssured. This framework demonstrates modern automation practices, design patterns, and scalable architecture.
-
-## Table of Contents
-- [Framework Architecture](#framework-architecture)
-- [Design Patterns](#design-patterns)
-- [Page Object Model Implementation](#page-object-model-implementation)
-- [WebDriver Management](#webdriver-management)
-- [Configuration Management](#configuration-management)
-- [Test Data Management](#test-data-management)
-- [Parallel Execution](#parallel-execution)
-- [Reporting and Logging](#reporting-and-logging)
-- [API and UI Integration](#api-and-ui-integration)
-- [Best Practices](#best-practices)
+A simple, scalable test automation framework built with Java, Selenium, TestNG, and RestAssured.
 
 ## Framework Architecture
 
-### 1. What is your approach to designing a scalable automation framework from scratch?
-
-Our framework follows a **layered architecture** with clear separation of concerns:
+The framework is organized in simple layers, each with a specific purpose:
 
 ```
 src/test/java/com/yourorg/
-├── abstracts/          # Abstract base classes
-├── api/               # API testing components
-├── base/              # Base test classes
-├── browser/           # Browser utilities
-├── common/            # Common utilities
-├── dataproviders/     # Test data providers
-├── exceptions/        # Custom exceptions
-├── interfaces/        # Framework interfaces
-├── listeners/         # TestNG listeners
-├── locators/          # Locator strategies
-├── models/            # Data models
-├── pages/             # Page objects
-├── reporting/         # Reporting utilities
-├── tests/             # Test classes
-└── utils/             # Utility classes
+├── base/              # Foundation layer - Base test classes
+├── pages/             # Page layer - Page objects for UI
+├── api/               # API layer - API testing components  
+├── utils/             # Utility layer - Common helper functions
+├── tests/             # Test layer - Actual test cases
+├── dataproviders/     # Data layer - Test data management
+├── listeners/         # Reporting layer - Test listeners and reports
+└── browser/           # Browser layer - WebDriver utilities
+```
+
+### Layer Explanation:
+
+**Base Layer** - Contains foundation classes that all tests inherit from
+**Page Layer** - Contains page objects representing UI pages
+**API Layer** - Contains API testing utilities and request builders
+**Utils Layer** - Contains reusable utility functions
+**Test Layer** - Contains actual test cases (UI and API)
+**Data Layer** - Manages test data from different sources
+**Reporting Layer** - Handles test reporting and logging
+**Browser Layer** - Manages browser interactions and WebDriver
+
+## Key Framework Questions & Answers
+
+### 1. What is your approach to designing a scalable automation framework from scratch?
+
+**Simple Layered Approach:**
+```java
+// Base Test - Foundation for all tests
+public class BaseTest {
+    protected WebDriver driver;
+    
+    @BeforeMethod
+    public void setup() {
+        driver = RemoteWebDriverFactory.createDriver();
+    }
+    
+    @AfterMethod  
+    public void teardown() {
+        RemoteWebDriverFactory.quitDriver();
+    }
+}
 ```
 
 **Key Principles:**
-- **Single Responsibility**: Each class has one clear purpose
-- **Open/Closed**: Open for extension, closed for modification
-- **Dependency Inversion**: Depend on abstractions, not concretions
-- **Interface Segregation**: Small, focused interfaces
+- Each layer has one responsibility
+- Easy to add new features
+- Reusable components
+- Clear separation of concerns
 
-## Design Patterns
+### 2. How do you implement Page Object Model (POM) in Selenium projects?
 
-### 2. What design patterns have you used in your automation framework and why?
-
-#### Singleton Pattern - WebDriver Management
-```java
-public class WebDriverManager implements IWebDriverManager {
-    private static WebDriverManager instance;
-    
-    public static WebDriverManager getInstance() {
-        if (instance == null) {
-            synchronized (WebDriverManager.class) {
-                if (instance == null) {
-                    instance = new WebDriverManager();
-                }
-            }
-        }
-        return instance;
-    }
-}
-```
-
-#### Factory Pattern - Data Provider Creation
-```java
-public class TestDataProviderFactory {
-    public static ITestDataProvider createDataProvider(String filePath) {
-        String extension = getFileExtension(filePath).toLowerCase();
-        
-        switch (extension) {
-            case "json":
-                return new JsonTestDataProvider(file.getParent());
-            case "xlsx":
-                return new ExcelDataProvider(filePath);
-            case "csv":
-                return new CsvDataProvider(filePath);
-            default:
-                throw new IllegalArgumentException("Unsupported file type: " + extension);
-        }
-    }
-}
-```
-
-#### Strategy Pattern - Locator Strategies
-```java
-public interface LocatorStrategy {
-    List<By> getLocators();
-    String getDescription();
-    int getPriority();
-}
-
-public class PrimaryLocatorStrategy implements LocatorStrategy {
-    public List<By> getLocators() {
-        return List.of(By.id(id), By.cssSelector(cssSelector));
-    }
-}
-```
-
-#### Builder Pattern - API Request Building
-```java
-public class RequestBuilder {
-    public RequestBuilder baseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
-        return this;
-    }
-    
-    public RequestBuilder endpoint(String endpoint) {
-        this.endpoint = endpoint;
-        return this;
-    }
-    
-    public RequestSpecification build() {
-        // Build and return request specification
-    }
-}
-```
-
-## Page Object Model Implementation
-
-### 3. How do you implement Page Object Model (POM) in Selenium projects?
-
-#### Abstract Base Page
-```java
-public abstract class AbstractBasePage implements IPageObject {
-    protected final WebDriver driver;
-    protected final BrowserUtils browserUtils;
-    
-    protected AbstractBasePage(WebDriver driver) throws Exception {
-        this.driver = driver;
-        this.browserUtils = new BrowserUtils(driver);
-    }
-    
-    // Template method pattern
-    public final boolean validatePage() {
-        try {
-            return validatePageElements() && validatePageUrl() && validatePageTitle();
-        } catch (Exception e) {
-            return false;
-        }
-    }
-    
-    protected abstract boolean validatePageElements();
-    protected abstract boolean validatePageUrl();
-    protected abstract boolean validatePageTitle();
-}
-```
-
-#### Concrete Page Implementation
+**Simple Page Object:**
 ```java
 public class HomePage {
     private final WebDriver driver;
@@ -160,153 +68,119 @@ public class HomePage {
     // Locators as constants
     private static final By LOGO = By.id("logo");
     private static final By SEARCH_BOX = By.cssSelector(".search-box input");
-    private static final By LOGIN_BUTTON_PRIMARY = By.cssSelector(".login-btn");
+    private static final By LOGIN_BUTTON = By.cssSelector(".login-btn");
     
     public HomePage(WebDriver driver) throws Exception {
         this.driver = driver;
         this.browserUtils = new BrowserUtils(driver);
     }
 
-    // Actions using direct locator approach
+    // Simple actions
+    public void clickLogo() throws Exception {
+        browserUtils.click(LOGO);
+    }
+    
     public void searchFor(String searchTerm) throws Exception {
         browserUtils.sendKeys(SEARCH_BOX, searchTerm);
-        browserUtils.click(SEARCH_BUTTON);
-    }
-    
-    public void clickLoginButton() throws Exception {
-        browserUtils.clickWithFallback(
-            LOGIN_BUTTON_PRIMARY,
-            By.xpath("//button[contains(text(), 'Login')]"),
-            By.id("login-button")
-        );
     }
 }
 ```
 
-### 4. How do you structure a page object in a scalable way?
+**Benefits:**
+- No WebElement variables (more reliable)
+- Direct locator usage
+- Simple action methods
+- Easy to maintain
 
-#### Component-Based Approach
-```java
-public class HeaderFooterComponent {
-    private final BrowserUtils browserUtils;
-    
-    // Header Locators
-    private static final By HEADER_LOGO = By.cssSelector(".header .logo");
-    private static final By USER_MENU = By.cssSelector(".header .user-menu");
-    
-    public void clickNavigationItem(String itemName) throws Exception {
-        browserUtils.clickWithFallback(
-            By.xpath("//nav//a[contains(text(), '" + itemName + "')]"),
-            By.cssSelector(".nav-menu a[href*='" + itemName.toLowerCase() + "']")
-        );
-    }
-}
-```
+### 3. How do you manage WebDriver instances in your framework?
 
-### 5. How do you ensure high maintainability of your page classes?
-
-#### Locator Fallback Strategy
-```java
-public class LocatorFallback {
-    public WebElement findElementWithFallback(List<By> locators, int timeoutSeconds) {
-        for (int i = 0; i < locators.size(); i++) {
-            try {
-                return customWait.until(ExpectedConditions.presenceOfElementLocated(locators.get(i)));
-            } catch (Exception e) {
-                if (i == locators.size() - 1) {
-                    throw new NoSuchElementException("Element not found with any locators");
-                }
-            }
-        }
-    }
-}
-```
-
-## WebDriver Management
-
-### 6. How do you manage WebDriver instances in your framework?
-
-#### Thread-Safe WebDriver Factory
+**Thread-Safe WebDriver Management:**
 ```java
 public class RemoteWebDriverFactory {
     private static final ThreadLocal<WebDriver> driverThreadLocal = new ThreadLocal<>();
 
     public static WebDriver createDriver() {
-        String browserName = EnvReader.get("BROWSER", ConfigLoader.get("browser.name", "chrome"));
-        String remoteUrl = EnvReader.get("REMOTE_URL", ConfigLoader.get("remote.url"));
+        String browserName = EnvReader.get("BROWSER", "chrome");
         boolean headless = EnvReader.getBoolean("HEADLESS", false);
         
-        WebDriver driver = Optional.ofNullable(remoteUrl)
-                .filter(url -> !url.isEmpty())
-                .map(url -> createRemoteDriver(browserName, url, headless))
-                .orElseGet(() -> createLocalDriver(browserName, headless));
-        
+        WebDriver driver = createLocalDriver(browserName, headless);
         configureDriver(driver);
         driverThreadLocal.set(driver);
         return driver;
     }
     
     public static WebDriver getDriver() {
+        return driverThreadLocal.get();
+    }
+    
+    public static void quitDriver() {
         WebDriver driver = driverThreadLocal.get();
-        if (driver == null) {
-            driver = createDriver();
+        if (driver != null) {
+            driver.quit();
+            driverThreadLocal.remove();
         }
-        return driver;
     }
 }
 ```
 
-### 7. How do you control browser and resolution configurations in parallel executions?
+**Key Features:**
+- Thread-safe for parallel execution
+- Supports multiple browsers
+- Automatic cleanup
+- Environment-based configuration
 
-#### Browser Configuration
+### 4. What are common utilities you include in your automation framework?
+
+**Browser Utilities:**
 ```java
-private ChromeOptions configureChromeOptions(boolean headless) {
-    ChromeOptions options = new ChromeOptions();
+public class BrowserUtils {
+    private final WebDriver driver;
     
-    List<String> chromeArgs = List.of(
-        "--no-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-gpu",
-        "--remote-allow-origins=*"
-    );
-    
-    options.addArguments(chromeArgs);
-    
-    if (headless) {
-        options.addArguments("--headless=new");
+    public void click(By locator) {
+        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(locator));
+        element.click();
     }
     
-    String windowSize = ConfigLoader.get("browser.window.size", "1920,1080");
-    options.addArguments("--window-size=" + windowSize);
+    public void sendKeys(By locator, String text) {
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        element.clear();
+        element.sendKeys(text);
+    }
     
-    return options;
+    public String getText(By locator) {
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        return element.getText();
+    }
 }
 ```
 
-## Configuration Management
+**Screenshot Utilities:**
+```java
+public class ScreenshotUtils {
+    public static String captureScreenshot(WebDriver driver, String testName) {
+        TakesScreenshot screenshot = (TakesScreenshot) driver;
+        File sourceFile = screenshot.getScreenshotAs(OutputType.FILE);
+        
+        String fileName = testName + "_" + timestamp + ".png";
+        String filePath = "reports/screenshots/" + fileName;
+        
+        FileUtils.copyFile(sourceFile, new File(filePath));
+        return filePath;
+    }
+}
+```
 
-### 8. How do you manage configurations (e.g., browser, environment, credentials) in your framework?
+### 5. How do you manage configurations in your framework?
 
-#### Environment-Based Configuration
+**Environment-Based Configuration:**
 ```java
 public class ConfigLoader {
     private static Properties properties;
     
     static {
-        loadConfig();
-    }
-    
-    private static void loadConfig() {
-        properties = new Properties();
         String environment = EnvReader.get("ENVIRONMENT", "qa");
-        String configFile = CONFIG_PATH + environment + "-config.properties";
-        
-        try {
-            properties.load(new FileInputStream(configFile));
-        } catch (IOException e) {
-            // Fallback to default config
-            properties.load(new FileInputStream(CONFIG_PATH + "config.properties"));
-        }
+        String configFile = "config/" + environment + "-config.properties";
+        properties.load(new FileInputStream(configFile));
     }
     
     public static String get(String key, String defaultValue) {
@@ -315,350 +189,101 @@ public class ConfigLoader {
 }
 ```
 
-#### Environment Reader with Multiple Sources
-```java
-public class EnvReader {
-    public static String get(String key) {
-        String value = System.getProperty(key);
-        if (value == null) {
-            value = System.getenv(key);
-        }
-        if (value == null && dotenv != null) {
-            value = dotenv.get(key);
-        }
-        return value;
-    }
-}
-```
-
-### 9. How do you manage environment-specific behavior?
-
-#### Configuration Files Structure
+**Configuration Files:**
 ```
 config/
-├── config.properties          # Default configuration
-├── qa-config.properties       # QA environment
-├── uat-config.properties      # UAT environment
-└── prod-config.properties     # Production environment
+├── qa-config.properties       # QA settings
+├── uat-config.properties      # UAT settings  
+└── prod-config.properties     # Production settings
 ```
 
-## Test Data Management
+**Sample Configuration:**
+```properties
+# qa-config.properties
+app.base.url=https://qa.example.com
+browser.name=chrome
+browser.headless=false
+test.username=qa_testuser
+test.password=qa_testpass
+```
 
-### 10. How do you handle test data in your automation framework?
+### 6. How do you design a hybrid framework, and why?
 
-#### Abstract Data Provider
+**Hybrid Framework = Data-Driven + Keyword-Driven + Modular**
+
 ```java
-public abstract class AbstractTestDataProvider implements ITestDataProvider {
-    protected final Map<String, Object> cache = new ConcurrentHashMap<>();
-    
-    @Override
-    public boolean isDataAvailable(String testName) {
-        return cache.containsKey(testName) || checkDataSource(testName);
+// Data-Driven Component
+@Test(dataProvider = "loginData")
+public void testLogin(String username, String password, String expected) {
+    loginPage.login(username, password);
+    // Validate result
+}
+
+// Keyword-Driven Component  
+public void performAction(String action, String element, String data) {
+    switch(action) {
+        case "click": browserUtils.click(getLocator(element)); break;
+        case "type": browserUtils.sendKeys(getLocator(element), data); break;
     }
-    
-    protected void cacheData(String key, Object data) {
-        cache.put(key, data);
+}
+
+// Modular Component
+public class LoginModule {
+    public void login(String username, String password) {
+        enterUsername(username);
+        enterPassword(password);
+        clickLoginButton();
     }
 }
 ```
 
-#### Multiple Data Source Support
+### 7. How do you structure reusable functions for different pages/modules?
+
+**Component-Based Approach:**
 ```java
-public class JsonTestDataProvider extends AbstractTestDataProvider {
-    @Override
-    public Map<String, Object> getTestData(String testName) {
-        Object cachedData = getCachedData(testName);
-        if (cachedData instanceof Map) {
-            return (Map<String, Object>) cachedData;
-        }
-        
-        String jsonContent = Files.readString(Paths.get(dataDirectory, testName + ".json"));
-        Map<String, Object> data = objectMapper.readValue(jsonContent, 
-                new TypeReference<Map<String, Object>>() {});
-        
-        cacheData(testName, data);
-        return data;
+// Reusable Header Component
+public class HeaderFooterComponent {
+    public void clickNavigationItem(String itemName) throws Exception {
+        browserUtils.clickWithFallback(
+            By.xpath("//nav//a[contains(text(), '" + itemName + "')]"),
+            By.cssSelector(".nav-menu a[href*='" + itemName.toLowerCase() + "']")
+        );
+    }
+    
+    public void searchInHeader(String searchTerm) throws Exception {
+        browserUtils.sendKeys(By.cssSelector(".search-bar input"), searchTerm);
+        browserUtils.click(By.cssSelector(".search-bar button"));
     }
 }
 ```
 
-### 11. How do you implement a data-driven test structure in TestNG?
+### 8. How do you manage dynamic elements or Ajax-heavy pages in Selenium?
 
-#### TestNG Data Providers
-```java
-@DataProvider(name = "loginDataProvider")
-public static Object[][] loginDataProvider() {
-    String filePath = "src/test/resources/testdata/login_data.csv";
-    CsvDataProvider provider = new CsvDataProvider(filePath);
-    return provider.getColumnsForTestNG("username", "password", "expectedResult");
-}
-
-@Test(dataProvider = "loginDataProvider")
-public void testLoginWithMultipleData(String username, String password, String expectedResult) {
-    // Test implementation
-}
-```
-
-### 12. How do you automate test data generation for boundary/edge cases?
-
-#### Faker Data Generation
-```java
-public class FakerDataGenerator {
-    private static final Faker faker = new Faker();
-    
-    public static User generateUser() {
-        return new User(faker);
-    }
-    
-    public static Map<String, String> generateSecurityTestData() {
-        Map<String, String> testData = new HashMap<>();
-        testData.put("sqlInjection1", "' OR '1'='1");
-        testData.put("xss1", "<script>alert('XSS')</script>");
-        return testData;
-    }
-    
-    public static Map<String, String> generateBoundaryTestData() {
-        Map<String, String> testData = new HashMap<>();
-        testData.put("longString", "a".repeat(1000));
-        testData.put("specialChars", "!@#$%^&*()_+-=");
-        return testData;
-    }
-}
-```
-
-## Parallel Execution
-
-### 13. How do you ensure parallel execution in your framework?
-
-#### TestNG Suite Configuration
-```xml
-<suite name="ParallelTestSuite" parallel="tests" thread-count="3">
-    <test name="UI Tests">
-        <parameter name="browser" value="chrome"/>
-        <classes>
-            <class name="com.yourorg.tests.ui.SanityTest"/>
-        </classes>
-    </test>
-</suite>
-```
-
-#### Thread-Safe Base Test
-```java
-@Listeners({TestListener.class})
-public class BaseTest {
-    protected WebDriver driver;
-    protected String testSessionId;
-
-    @BeforeMethod
-    public void beforeMethod() {
-        try {
-            driver = RemoteWebDriverFactory.createDriver();
-            StateRetentionManager.setSessionState(testSessionId, "driver", driver);
-        } catch (Exception e) {
-            throw new RuntimeException("Driver creation failed", e);
-        }
-    }
-    
-    @AfterMethod
-    public void afterMethod() {
-        try {
-            if (driver != null) {
-                RemoteWebDriverFactory.quitDriver();
-            }
-        } catch (Exception e) {
-            logger.error("Error in afterMethod: {}", e.getMessage());
-        }
-    }
-}
-```
-
-## Reporting and Logging
-
-### 14. How do you design framework logs and reports?
-
-#### Extent Report Manager
-```java
-public class ExtentReportManager implements IReportManager {
-    private ExtentReports extent;
-    private final ThreadLocal<ExtentTest> extentTest = new ThreadLocal<>();
-    
-    @Override
-    public void initializeReport() {
-        ExtentSparkReporter sparkReporter = new ExtentSparkReporter(reportPath);
-        configureSparkReporter(sparkReporter);
-        
-        extent = new ExtentReports();
-        extent.attachReporter(sparkReporter);
-        addSystemInformation();
-    }
-    
-    @Override
-    public void onTestFailure(ITestResult result) {
-        logFail("Test failed", result.getThrowable());
-        
-        String screenshotPath = captureScreenshotOnFailure(result);
-        if (screenshotPath != null) {
-            getCurrentTest().addScreenCaptureFromPath(screenshotPath);
-        }
-    }
-}
-```
-
-#### Structured Logging
-```xml
-<!-- log4j2.xml -->
-<Configuration status="WARN">
-    <Appenders>
-        <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-        </Console>
-        <RollingFile name="RollingFileAppender" fileName="logs/automation-rolling.log">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="10MB"/>
-            </Policies>
-        </RollingFile>
-    </Appenders>
-    
-    <Loggers>
-        <Logger name="com.yourorg.tests" level="INFO" additivity="false">
-            <AppenderRef ref="Console"/>
-            <AppenderRef ref="RollingFileAppender"/>
-        </Logger>
-    </Loggers>
-</Configuration>
-```
-
-## API and UI Integration
-
-### 15. How do you integrate API and UI testing in a single framework?
-
-#### User Management with API Setup
-```java
-public class UserManagementUtils {
-    public static TestUser createTestUser() throws Exception {
-        // Generate unique user data
-        String username = "testuser_" + System.currentTimeMillis();
-        String email = "testuser_" + System.currentTimeMillis() + "@example.com";
-        
-        Map<String, Object> userData = new HashMap<>();
-        userData.put("username", username);
-        userData.put("email", email);
-        userData.put("password", "TestPass123!");
-        
-        // Create user via API
-        Response response = APIUtils.post("/users", userData);
-        APIUtils.validateStatusCode(response, 201);
-        
-        String userId = response.jsonPath().getString("id");
-        String authToken = APIUtils.authenticateUser(username, "TestPass123!");
-        
-        return new TestUser(userId, username, email, "TestPass123!", authToken);
-    }
-    
-    public static void setupUserSession(WebDriver driver, TestUser user) throws Exception {
-        driver.get(ConfigLoader.get("app.base.url"));
-        
-        Cookie authCookie = new Cookie("auth_token", user.getAuthToken());
-        driver.manage().addCookie(authCookie);
-        driver.navigate().refresh();
-    }
-}
-```
-
-#### API Chain Execution
-```java
-public class APIChainExecutor {
-    public ChainResult executeChain(ChainDefinition chainDefinition) throws Exception {
-        ChainResult result = new ChainResult(chainDefinition.getName());
-        
-        for (ChainStep step : chainDefinition.getSteps()) {
-            Response response = executeStep(step);
-            result.addStepResult(step.getName(), response);
-            
-            // Extract data for next steps
-            if (step.getDataExtractor() != null) {
-                Map<String, Object> extractedData = step.getDataExtractor().apply(response);
-                chainContext.putAll(extractedData);
-            }
-        }
-        
-        return result;
-    }
-}
-```
-
-## Utilities and Common Functions
-
-### 16. What are common utilities you include in your automation framework?
-
-#### Browser Utils with Fallback Support
+**Smart Wait Strategies:**
 ```java
 public class BrowserUtils {
-    public void clickWithFallback(By... locators) {
-        for (By locator : locators) {
-            try {
-                click(locator);
-                return;
-            } catch (Exception e) {
-                logger.debug("Locator {} failed, trying next fallback", locator.toString());
-            }
-        }
-        throw new RuntimeException("All fallback locators failed");
-    }
-    
-    public void sendKeysWithFallback(String text, By... locators) {
-        for (By locator : locators) {
-            try {
-                sendKeys(locator, text);
-                return;
-            } catch (Exception e) {
-                logger.debug("Locator {} failed for sendKeys, trying next fallback", locator.toString());
-            }
-        }
-        throw new RuntimeException("All fallback locators failed for sendKeys");
-    }
-}
-```
-
-#### Advanced Collection Utils
-```java
-public class AdvancedCollectionUtils {
-    public static <T, R> List<R> filterAndTransform(Collection<T> collection, 
-                                                   Predicate<T> filter, 
-                                                   Function<T, R> transformer) {
-        return collection.stream()
-                .filter(Objects::nonNull)
-                .filter(filter)
-                .map(transformer)
-                .collect(Collectors.toList());
-    }
-    
-    public static <T> Set<T> findDuplicates(Collection<T> collection) {
-        Set<T> seen = new HashSet<>();
-        return collection.stream()
-                .filter(item -> !seen.add(item))
-                .collect(Collectors.toSet());
-    }
-}
-```
-
-## Dynamic Elements and Ajax Handling
-
-### 17. How do you manage dynamic elements or Ajax-heavy pages in Selenium?
-
-#### Custom Wait Strategies
-```java
-public class BrowserUtils {
+    // Wait for element to be clickable
     public WebElement waitForElementToBeClickable(By locator, int timeoutSeconds) {
         WebDriverWait customWait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
         return customWait.until(ExpectedConditions.elementToBeClickable(locator));
     }
     
+    // Wait for element to disappear (for loading spinners)
     public boolean waitForElementToDisappear(By locator, int timeoutSeconds) {
         try {
-            WebDriverWait customWait = createCustomWait(timeoutSeconds);
+            WebDriverWait customWait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
             return customWait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    // Wait for element to be visible
+    public boolean waitForElementToBeVisible(By locator, int timeoutSeconds) {
+        try {
+            WebDriverWait customWait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
+            customWait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+            return true;
         } catch (Exception e) {
             return false;
         }
@@ -666,16 +291,72 @@ public class BrowserUtils {
 }
 ```
 
-## Test Suite Design
+### 9. How do you ensure parallel execution in your framework?
 
-### 18. How do you design your test suites in TestNG for flexibility and scalability?
-
-#### Flexible Suite Configuration
+**TestNG Parallel Configuration:**
 ```xml
-<suite name="FlexibleTestSuite" parallel="tests" thread-count="3">
-    <parameter name="environment" value="qa"/>
-    <parameter name="browser" value="chrome"/>
+<suite name="ParallelTestSuite" parallel="tests" thread-count="3">
+    <test name="UI Tests">
+        <classes>
+            <class name="com.yourorg.tests.ui.SanityTest"/>
+        </classes>
+    </test>
+    <test name="API Tests">
+        <classes>
+            <class name="com.yourorg.tests.api.UserServiceTest"/>
+        </classes>
+    </test>
+</suite>
+```
+
+**Thread-Safe Base Test:**
+```java
+public class BaseTest {
+    protected WebDriver driver;
     
+    @BeforeMethod
+    public void beforeMethod() {
+        driver = RemoteWebDriverFactory.createDriver(); // Thread-safe
+    }
+    
+    @AfterMethod
+    public void afterMethod() {
+        RemoteWebDriverFactory.quitDriver(); // Clean up per thread
+    }
+}
+```
+
+### 10. How do you design framework logs and reports?
+
+**Simple Logging Setup:**
+```java
+public class TestListener implements ITestListener {
+    private static ExtentReports extent;
+    private static ThreadLocal<ExtentTest> extentTest = new ThreadLocal<>();
+
+    @Override
+    public void onTestStart(ITestResult result) {
+        ExtentTest test = extent.createTest(result.getMethod().getMethodName());
+        extentTest.set(test);
+    }
+
+    @Override
+    public void onTestFailure(ITestResult result) {
+        ExtentTest test = extentTest.get();
+        test.log(Status.FAIL, "Test failed");
+        
+        // Capture screenshot on failure
+        String screenshotPath = ScreenshotUtils.captureScreenshot(driver, result.getMethod().getMethodName());
+        test.addScreenCaptureFromPath(screenshotPath);
+    }
+}
+```
+
+### 11. How do you design your test suites in TestNG for flexibility and scalability?
+
+**Flexible Test Suite Design:**
+```xml
+<suite name="FlexibleSuite" parallel="tests" thread-count="3">
     <test name="Sanity Tests">
         <groups>
             <run>
@@ -687,39 +368,170 @@ public class BrowserUtils {
             <class name="com.yourorg.tests.ui.SanityTest"/>
         </classes>
     </test>
-    
-    <test name="Regression Tests">
-        <groups>
-            <run>
-                <include name="regression"/>
-            </run>
-        </groups>
-        <classes>
-            <class name="com.yourorg.tests.ui.RegressionTest"/>
-        </classes>
-    </test>
 </suite>
 ```
 
-#### Test Prioritization and Grouping
+**Test Grouping:**
 ```java
-@Test(priority = 1, groups = {"sanity", "critical"}, retryAnalyzer = RetryAnalyzer.class)
-@Description("Verify that the home page loads successfully")
-@Severity(SeverityLevel.BLOCKER)
-public void testHomePageLoads() throws Exception {
+@Test(priority = 1, groups = {"sanity", "critical"})
+public void testHomePageLoads() {
+    // Test implementation
+}
+
+@Test(priority = 2, groups = {"regression", "ui"})
+public void testLoginFunctionality() {
     // Test implementation
 }
 ```
 
-## Exception Handling and Retry Logic
+### 12. How do you handle test data in your automation framework?
 
-### 19. How do you implement retry logic for recoverable test failures?
+**Multiple Data Sources:**
+```java
+// JSON Data Provider
+public class JsonTestDataProvider {
+    public Map<String, Object> getTestData(String testName) {
+        String jsonContent = Files.readString(Paths.get(dataDirectory, testName + ".json"));
+        return objectMapper.readValue(jsonContent, Map.class);
+    }
+}
 
-#### Retry Analyzer
+// CSV Data Provider  
+public class CsvDataProvider {
+    public Object[][] getDataForTestNG() {
+        List<Map<String, Object>> dataList = getBulkTestData("data");
+        Object[][] testData = new Object[dataList.size()][];
+        for (int i = 0; i < dataList.size(); i++) {
+            testData[i] = new Object[]{dataList.get(i)};
+        }
+        return testData;
+    }
+}
+```
+
+**Data-Driven Test:**
+```java
+@Test(dataProvider = "loginDataProvider")
+public void testLoginWithMultipleData(String username, String password, String expectedResult) {
+    loginPage.login(username, password);
+    // Validate based on expectedResult
+}
+```
+
+### 13. How do you externalize locators in a scalable way?
+
+**Locator Constants in Page Classes:**
+```java
+public class HomePage {
+    // Locators as constants
+    private static final By LOGO = By.id("logo");
+    private static final By SEARCH_BOX = By.cssSelector(".search-box input");
+    private static final By LOGIN_BUTTON_PRIMARY = By.cssSelector(".login-btn");
+    private static final By LOGIN_BUTTON_FALLBACK = By.xpath("//button[contains(text(), 'Login')]");
+    
+    // Fallback locator approach
+    public void clickLoginButton() throws Exception {
+        browserUtils.clickWithFallback(
+            LOGIN_BUTTON_PRIMARY,
+            LOGIN_BUTTON_FALLBACK,
+            By.id("login-button")
+        );
+    }
+}
+```
+
+### 14. How do you maintain a clean separation of concerns in your framework?
+
+**Clear Layer Separation:**
+```java
+// Base Layer - Foundation
+public class BaseTest {
+    // Common setup/teardown
+}
+
+// Page Layer - UI Interactions
+public class LoginPage {
+    // Only login page related actions
+}
+
+// Utils Layer - Reusable Functions
+public class BrowserUtils {
+    // Browser interaction utilities
+}
+
+// Test Layer - Test Logic
+public class LoginTests extends BaseTest {
+    // Only test logic, no page interactions
+}
+```
+
+### 15. How do you integrate API and UI testing in a single framework?
+
+**Combined API + UI Testing:**
+```java
+public class UserManagementUtils {
+    // Create user via API
+    public static TestUser createTestUser() throws Exception {
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("username", "testuser_" + System.currentTimeMillis());
+        userData.put("email", "test@example.com");
+        userData.put("password", "TestPass123!");
+        
+        Response response = APIUtils.post("/users", userData);
+        String userId = response.jsonPath().getString("id");
+        String authToken = APIUtils.authenticateUser(username, password);
+        
+        return new TestUser(userId, username, email, password, authToken);
+    }
+    
+    // Setup UI session with API-created user
+    public static void setupUserSession(WebDriver driver, TestUser user) throws Exception {
+        driver.get(ConfigLoader.get("app.base.url"));
+        Cookie authCookie = new Cookie("auth_token", user.getAuthToken());
+        driver.manage().addCookie(authCookie);
+        driver.navigate().refresh();
+    }
+}
+```
+
+### 16. What's your approach to building cross-browser test capabilities?
+
+**Browser Configuration:**
+```java
+public class RemoteWebDriverFactory {
+    public static WebDriver createDriver() {
+        String browserName = EnvReader.get("BROWSER", "chrome");
+        
+        switch (browserName.toLowerCase()) {
+            case "chrome":
+                return new ChromeDriver(configureChromeOptions());
+            case "firefox":
+                return new FirefoxDriver(configureFirefoxOptions());
+            case "edge":
+                return new EdgeDriver(configureEdgeOptions());
+            default:
+                return new ChromeDriver(configureChromeOptions());
+        }
+    }
+    
+    private static ChromeOptions configureChromeOptions() {
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--no-sandbox", "--disable-dev-shm-usage");
+        if (EnvReader.getBoolean("HEADLESS", false)) {
+            options.addArguments("--headless=new");
+        }
+        return options;
+    }
+}
+```
+
+### 17. How do you handle flaky tests in your framework?
+
+**Retry Mechanism:**
 ```java
 public class RetryAnalyzer implements IRetryAnalyzer {
     private int retryCount = 0;
-    private static final int MAX_RETRY_COUNT = ConfigLoader.getInt("test.retry.count", 2);
+    private static final int MAX_RETRY_COUNT = 2;
 
     @Override
     public boolean retry(ITestResult result) {
@@ -732,279 +544,162 @@ public class RetryAnalyzer implements IRetryAnalyzer {
         return false;
     }
 }
+
+// Usage in test
+@Test(retryAnalyzer = RetryAnalyzer.class)
+public void testLogin() {
+    // Test implementation
+}
 ```
 
-#### Custom Exception Hierarchy
+### 18. How do you build browser-agnostic locators for better test resilience?
+
+**Fallback Locator Strategy:**
 ```java
-public class FrameworkException extends Exception {
-    private final String errorCode;
-    private final String component;
-    
-    public FrameworkException(String message, String errorCode, String component) {
-        super(message);
-        this.errorCode = errorCode;
-        this.component = component;
-    }
-}
-
-public class PageObjectException extends FrameworkException {
-    public PageObjectException(String message) {
-        super(message, "PAGE_OBJECT_ERROR", "PAGE_OBJECT");
-    }
-}
-```
-
-## State Management
-
-### 20. How do you handle test data setup and teardown at runtime?
-
-#### State Retention Manager
-```java
-public class StateRetentionManager {
-    private static final Map<String, Map<String, Object>> sessionState = new ConcurrentHashMap<>();
-    private static final Map<String, Object> globalState = new ConcurrentHashMap<>();
-
-    public static void setSessionState(String sessionId, String key, Object value) {
-        sessionState.computeIfAbsent(sessionId, k -> new HashMap<>()).put(key, value);
-    }
-    
-    public static Object getSessionState(String sessionId, String key) {
-        Map<String, Object> session = sessionState.get(sessionId);
-        return session != null ? session.get(key) : null;
-    }
-}
-```
-
-## Security Testing
-
-### 21. How do you deal with security or permission testing in UI frameworks?
-
-#### Security Test Implementation
-```java
-public class SecurityTests extends BaseTest {
-    @Test(groups = {"security", "sql-injection"})
-    public void testSQLInjectionVulnerabilities() throws Exception {
-        String[] sqlInjectionPayloads = {
-            "' OR '1'='1",
-            "'; DROP TABLE users; --",
-            "1' UNION SELECT * FROM users --"
-        };
-        
-        for (String payload : sqlInjectionPayloads) {
-            Response response = APIUtils.testSQLInjection("/auth/login", payload);
-            Assert.assertNotEquals(response.getStatusCode(), 200, 
-                    "SQL injection payload should not succeed: " + payload);
-        }
-    }
-}
-```
-
-## CI/CD Integration
-
-### 22. How do you ensure your framework is CI/CD compatible?
-
-#### Docker Configuration
-```dockerfile
-FROM eclipse-temurin:11-jre-alpine
-
-RUN apk add --no-cache \
-    curl \
-    bash \
-    chromium \
-    chromium-chromedriver \
-    firefox
-
-ENV CHROME_BIN=/usr/bin/chromium-browser
-ENV CHROMEDRIVER_PATH=/usr/bin/chromedriver
-
-WORKDIR /app
-COPY . .
-
-ENTRYPOINT ["/app/entrypoint.sh"]
-```
-
-#### Jenkins Pipeline
-```groovy
-pipeline {
-    agent any
-    
-    parameters {
-        choice(name: 'ENVIRONMENT', choices: ['qa', 'uat', 'prod'])
-        choice(name: 'BROWSER', choices: ['chrome', 'firefox', 'edge'])
-        choice(name: 'TEST_SUITE', choices: ['sanity', 'regression', 'all'])
-    }
-    
-    stages {
-        stage('Run Tests') {
-            steps {
-                script {
-                    if (params.TEST_SUITE == 'sanity') {
-                        sh "mvn test -Psanity -Dthread.count=${params.THREAD_COUNT}"
-                    } else if (params.TEST_SUITE == 'regression') {
-                        sh "mvn test -Pregression -Dthread.count=${params.THREAD_COUNT}"
-                    }
-                }
+public class BrowserUtils {
+    // Multiple locator fallback
+    public void clickWithFallback(By... locators) {
+        for (By locator : locators) {
+            try {
+                click(locator);
+                return; // Success, exit
+            } catch (Exception e) {
+                logger.debug("Locator {} failed, trying next", locator);
             }
         }
-        
-        stage('Generate Reports') {
-            steps {
-                sh 'mvn allure:report'
-                publishHTML([
-                    reportDir: 'reports/extent-report',
-                    reportFiles: '*.html',
-                    reportName: 'Extent Report'
-                ])
-            }
+        throw new RuntimeException("All fallback locators failed");
+    }
+}
+
+// Usage in page
+public void clickLoginButton() throws Exception {
+    browserUtils.clickWithFallback(
+        By.cssSelector(".login-btn"),           // Primary
+        By.xpath("//button[text()='Login']"),   // Fallback 1
+        By.id("login-button"),                  // Fallback 2
+        By.name("login")                        // Fallback 3
+    );
+}
+```
+
+### 19. How do you implement reusable custom wait strategies?
+
+**Custom Wait Utilities:**
+```java
+public class BrowserUtils {
+    private final WebDriverWait wait;
+    
+    public BrowserUtils(WebDriver driver) {
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    }
+    
+    // Custom wait with timeout
+    public WebElement waitForElement(By locator, int timeoutSeconds) {
+        WebDriverWait customWait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
+        return customWait.until(ExpectedConditions.presenceOfElementLocated(locator));
+    }
+    
+    // Wait for element to disappear
+    public boolean waitForElementToDisappear(By locator, int timeoutSeconds) {
+        try {
+            WebDriverWait customWait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
+            return customWait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
+        } catch (Exception e) {
+            return false;
         }
     }
 }
 ```
 
-## Advanced Features
+### 20. How do you implement role-based test flows (admin, user, guest)?
 
-### 23. How do you implement business-readable test scenarios?
-
-#### Allure Annotations
+**Role-Based User Creation:**
 ```java
-@Epic("E-Commerce Tests")
-@Feature("Shopping Cart")
-@Test(description = "End-to-end shopping cart flow with pre-configured user")
-@Severity(SeverityLevel.CRITICAL)
-public void testShoppingCartFlow() throws Exception {
-    // Create user with shopping cart data
-    testUser = UserManagementUtils.createTestUser();
-    UserManagementUtils.prepareUserWithData(testUser, "shopping_cart");
-    
-    // Test implementation with clear steps
-    Allure.step("Navigate to application", () -> {
-        navigateToBaseUrl();
-    });
-    
-    Allure.step("Verify cart has items", () -> {
-        headerFooter.clickCartIcon();
-        Assert.assertTrue(currentUrl.contains("cart"));
-    });
-}
-```
-
-### 24. How do you handle large datasets and complex API responses?
-
-#### Response Manager for Large Datasets
-```java
-public class ResponseManager {
-    public Map<String, Object> findRecordById(Response response, String idField, String targetId) {
-        String jsonResponse = response.getBody().asString();
-        List<Map<String, Object>> records = JsonPath.read(jsonResponse, 
-                "$[?(@." + idField + " == '" + targetId + "')]");
+public class UserManagementUtils {
+    public static TestUser createAdminUser() throws Exception {
+        Map<String, Object> adminPermissions = new HashMap<>();
+        adminPermissions.put("admin", true);
+        adminPermissions.put("manage_users", true);
         
-        return records.isEmpty() ? new HashMap<>() : records.get(0);
+        return createTestUser("admin", adminPermissions);
     }
     
-    public List<Map<String, Object>> filterRecords(Response response, 
-                                                   Map<String, Predicate<Object>> filters) {
-        List<Map<String, Object>> allRecords = response.jsonPath().getList("$");
+    public static TestUser createUserWithRole(String role) throws Exception {
+        Map<String, Object> rolePermissions = new HashMap<>();
         
-        return allRecords.stream()
-                .filter(record -> filters.entrySet().stream()
-                        .allMatch(entry -> entry.getValue().test(record.get(entry.getKey()))))
-                .collect(Collectors.toList());
+        switch (role.toLowerCase()) {
+            case "customer":
+                rolePermissions.put("place_orders", true);
+                break;
+            case "vendor":
+                rolePermissions.put("manage_products", true);
+                break;
+        }
+        
+        return createTestUser(role, rolePermissions);
     }
 }
 ```
 
 ## Getting Started
 
-### Prerequisites
-- Java 11 or higher
-- Maven 3.6+
-- Chrome/Firefox browsers
-
-### Installation
+### Quick Setup
 ```bash
+# Clone the repository
 git clone <repository-url>
 cd advanced-test-automation-framework
-mvn clean compile
-```
 
-### Running Tests
-```bash
-# Run sanity tests
-mvn test -Psanity
-
-# Run regression tests
-mvn test -Pregression
-
-# Run with specific browser
-mvn test -Psanity -Dbrowser=firefox
-
-# Run with specific environment
-mvn test -Psanity -Denvironment=uat
-
-# Run in headless mode
-mvn test -Psanity -Dheadless=true
+# Run tests
+mvn test -Psanity                    # Run sanity tests
+mvn test -Pregression               # Run regression tests
+mvn test -Psanity -Dbrowser=firefox # Run with Firefox
+mvn test -Psanity -Dheadless=true   # Run headless
 ```
 
 ### Configuration
-
-#### Environment Variables
+Set environment variables:
 ```bash
 export ENVIRONMENT=qa
 export BROWSER=chrome
-export HEADLESS=true
+export HEADLESS=false
 export THREAD_COUNT=3
 ```
 
-#### Configuration Files
-- `config/qa-config.properties` - QA environment settings
-- `config/uat-config.properties` - UAT environment settings
-- `config/prod-config.properties` - Production environment settings
+### Project Structure
+```
+├── config/                 # Environment configurations
+├── src/test/java/          # Test source code
+│   ├── base/              # Base test classes
+│   ├── pages/             # Page objects
+│   ├── tests/             # Test cases
+│   ├── utils/             # Utilities
+│   └── api/               # API testing
+├── src/test/resources/     # Test resources
+│   ├── testdata/          # Test data files
+│   └── testng-*.xml       # TestNG suites
+└── reports/               # Test reports
+```
 
-## Framework Benefits
+## Key Benefits
 
-### Scalability
-- **Modular Architecture**: Easy to add new components
-- **Parallel Execution**: Supports multiple threads
-- **Cross-Browser**: Chrome, Firefox, Edge, Safari
-- **Environment Agnostic**: QA, UAT, Production
+✅ **Simple to understand** - Clear layer separation  
+✅ **Easy to maintain** - Fallback locators and clean code  
+✅ **Parallel execution** - Thread-safe WebDriver management  
+✅ **Cross-browser support** - Chrome, Firefox, Edge  
+✅ **Data-driven testing** - Multiple data sources  
+✅ **API + UI integration** - Combined testing approach  
+✅ **Rich reporting** - Extent Reports with screenshots  
+✅ **CI/CD ready** - Docker and Jenkins support  
 
-### Maintainability
-- **Locator Fallback**: Multiple locator strategies
-- **Page Components**: Reusable UI components
-- **Clean Code**: SOLID principles applied
-- **Exception Handling**: Comprehensive error management
+## Framework Highlights
 
-### Reliability
-- **Retry Mechanism**: Automatic retry for flaky tests
-- **Wait Strategies**: Smart waiting for elements
-- **State Management**: Session and global state handling
-- **Screenshot Capture**: Automatic failure screenshots
+- **No WebElement variables** - Direct locator usage for reliability
+- **Fallback locators** - Multiple strategies for resilient tests  
+- **Thread-safe design** - Supports parallel execution
+- **Environment-based config** - Easy environment switching
+- **Comprehensive utilities** - Browser, screenshot, data utilities
+- **Hybrid approach** - Data-driven + modular + keyword-driven
+- **Clean architecture** - SOLID principles applied
+- **Rich reporting** - Detailed HTML reports with screenshots
 
-### Reporting
-- **Allure Reports**: Rich, interactive reports
-- **Extent Reports**: Detailed HTML reports
-- **Logging**: Structured logging with Log4j2
-- **CI Integration**: Jenkins, Docker support
-
-## Best Practices Implemented
-
-1. **No WebElement Variables**: Direct locator usage for better reliability
-2. **Fallback Locators**: Multiple locator strategies for resilience
-3. **Thread Safety**: ThreadLocal WebDriver management
-4. **Configuration Management**: Environment-specific configurations
-5. **Data Separation**: External test data management
-6. **API Integration**: Combined API and UI testing
-7. **Security Testing**: Built-in security test capabilities
-8. **Performance Testing**: Load and performance test support
-
-## Contributing
-
-1. Follow the established package structure
-2. Implement interfaces for new components
-3. Add comprehensive logging
-4. Include unit tests for utilities
-5. Update documentation
-
-## Support
-
-For questions or issues, please refer to the framework documentation or contact the automation team.
+This framework provides a solid foundation for scalable test automation while keeping complexity manageable.

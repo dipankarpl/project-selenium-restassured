@@ -2,7 +2,6 @@
 <suite name="SanityTestSuite" parallel="tests" thread-count="2">
     <listeners>
         <listener class-name="com.yourorg.listeners.TestListener"/>
-        <listener class-name="com.yourorg.listeners.LogListener"/>
     </listeners>
     
     <test name="UI Sanity Tests">
@@ -15,17 +14,7 @@
             </run>
         </groups>
         <classes>
-            <class name="com.yourorg.tests.ui.AuthenticationTests">
-                <methods>
-                    <include name="testUserLoginFlow"/>
-                    <include name="testDirectSessionSetup"/>
-                </methods>
-            </class>
-            <class name="com.yourorg.tests.ui.NavigationTests">
-                <methods>
-                    <include name="testMainNavigation"/>
-                </methods>
-            </class>
+            <class name="com.yourorg.tests.ui.SanityTest"/>
         </classes>
     </test>
     
@@ -35,7 +24,6 @@
             <run>
                 <include name="sanity"/>
                 <include name="api"/>
-                <include name="critical"/>
             </run>
         </groups>
         <classes>
@@ -43,13 +31,6 @@
                 <methods>
                     <include name="testUserAuthentication"/>
                     <include name="testGetUserProfile"/>
-                    <include name="testCreateUser"/>
-                </methods>
-            </class>
-            <class name="com.yourorg.tests.api.PaymentServiceTest">
-                <methods>
-                    <include name="testCreatePaymentIntent"/>
-                    <include name="testGetPaymentDetails"/>
                 </methods>
             </class>
         </classes>

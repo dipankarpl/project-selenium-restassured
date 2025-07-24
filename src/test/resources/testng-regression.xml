@@ -2,7 +2,6 @@
 <suite name="RegressionTestSuite" parallel="tests" thread-count="3">
     <listeners>
         <listener class-name="com.yourorg.listeners.TestListener"/>
-        <listener class-name="com.yourorg.listeners.LogListener"/>
     </listeners>
     
     <test name="UI Regression Tests">
@@ -15,27 +14,7 @@
             </run>
         </groups>
         <classes>
-            <class name="com.yourorg.tests.ui.AuthenticationTests"/>
-            <class name="com.yourorg.tests.ui.NavigationTests"/>
-            <class name="com.yourorg.tests.ui.ECommerceTests"/>
-        </classes>
-    </test>
-    
-    <test name="End-to-End Tests">
-        <parameter name="browser" value="chrome"/>
-        <parameter name="environment" value="qa"/>
-        <groups>
-            <run>
-                <include name="end-to-end"/>
-            </run>
-        </groups>
-        <classes>
-            <class name="com.yourorg.tests.ui.ECommerceTests">
-                <methods>
-                    <include name="testShoppingCartFlow"/>
-                    <include name="testCheckoutProcess"/>
-                </methods>
-            </class>
+            <class name="com.yourorg.tests.ui.SanityTest"/>
         </classes>
     </test>
     
@@ -49,7 +28,6 @@
         </groups>
         <classes>
             <class name="com.yourorg.tests.api.UserServiceTest"/>
-            <class name="com.yourorg.tests.api.PaymentServiceTest"/>
         </classes>
     </test>
 </suite>

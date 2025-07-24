@@ -10,7 +10,6 @@ import java.util.Properties;
 public class ConfigLoader {
     private static final Logger logger = LogManager.getLogger(ConfigLoader.class);
     private static Properties properties;
-    private static final String CONFIG_PATH = "config/";
 
     static {
         loadConfig();
@@ -18,18 +17,16 @@ public class ConfigLoader {
 
     private static void loadConfig() {
         properties = new Properties();
-        String environment = EnvReader.get("ENVIRONMENT", "qa");
-        String configFile = CONFIG_PATH + environment + "-config.properties";
+        String environment = System.getProperty("environment", "qa");
+        String configFile = "config/" + environment + "-config.properties";
         
         try {
-            // Load environment-specific config
             properties.load(new FileInputStream(configFile));
             logger.info("Loaded configuration from: {}", configFile);
         } catch (IOException e) {
-            logger.warn("Failed to load environment-specific config: {}. Loading default config.", e.getMessage());
+            logger.warn("Failed to load config: {}. Loading default config.", e.getMessage());
             try {
-                // Fallback to default config
-                properties.load(new FileInputStream(CONFIG_PATH + "config.properties"));
+                properties.load(new FileInputStream("config/config.properties"));
                 logger.info("Loaded default configuration");
             } catch (IOException ex) {
                 logger.error("Failed to load default configuration: {}", ex.getMessage());
@@ -64,9 +61,5 @@ public class ConfigLoader {
             return Boolean.parseBoolean(value);
         }
         return defaultValue;
-    }
-
-    public static void reloadConfig() {
-        loadConfig();
     }
 }

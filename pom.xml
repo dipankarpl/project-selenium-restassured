@@ -13,36 +13,26 @@
     <description>Enterprise-grade test automation framework with Selenium, TestNG, RestAssured, Faker, and Security Testing</description>
 
     <properties>
-        <maven.compiler.source>14</maven.compiler.source>
-        <maven.compiler.target>14</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         
         <!-- Dependency Versions -->
-        <selenium.version>4.15.0</selenium.version>
+        <selenium.version>4.11.0</selenium.version>
         <testng.version>7.8.0</testng.version>
-        <restassured.version>5.3.2</restassured.version>
-        <webdrivermanager.version>5.6.2</webdrivermanager.version>
-        <allure.version>2.24.0</allure.version>
+        <restassured.version>5.3.0</restassured.version>
+        <webdrivermanager.version>5.3.0</webdrivermanager.version>
+        <allure.version>2.20.1</allure.version>
         <extent.version>5.1.1</extent.version>
-        <log4j.version>2.22.0</log4j.version>
-        <jackson.version>2.16.0</jackson.version>
-        <mysql.version>8.0.33</mysql.version>
-        <postgresql.version>42.7.1</postgresql.version>
-        <apache.poi.version>5.2.5</apache.poi.version>
-        <commons.io.version>2.15.1</commons.io.version>
-        <gson.version>2.10.1</gson.version>
-        <json.schema.validator.version>5.3.0</json.schema.validator.version>
+        <log4j.version>2.20.0</log4j.version>
+        <jackson.version>2.15.0</jackson.version>
+        <commons.io.version>2.11.0</commons.io.version>
+        <gson.version>2.10.0</gson.version>
         <hamcrest.version>2.2</hamcrest.version>
-        <dotenv.version>3.0.0</dotenv.version>
-        <maven.surefire.version>3.2.2</maven.surefire.version>
-        <maven.compiler.version>3.11.0</maven.compiler.version>
-        <allure.maven.version>2.12.0</allure.maven.version>
+        <maven.surefire.version>3.0.0</maven.surefire.version>
+        <maven.compiler.version>3.10.1</maven.compiler.version>
+        <allure.maven.version>2.20.1</allure.maven.version>
         <faker.version>1.0.2</faker.version>
-        <json.path.version>2.8.0</json.path.version>
-        <wiremock.version>3.13.1</wiremock.version>
-        <awaitility.version>4.2.0</awaitility.version>
-        <opencsv.version>5.9</opencsv.version>
-        <json.simple.version>1.1.1</json.simple.version>
     </properties>
 
     <dependencies>
@@ -74,38 +64,10 @@
             <version>${restassured.version}</version>
         </dependency>
 
-        <!-- JSON Schema Validator -->
-        <dependency>
-            <groupId>io.rest-assured</groupId>
-            <artifactId>json-schema-validator</artifactId>
-            <version>${restassured.version}</version>
-        </dependency>
-
-        <!-- JSON Path -->
-        <dependency>
-            <groupId>io.rest-assured</groupId>
-            <artifactId>json-path</artifactId>
-            <version>${restassured.version}</version>
-        </dependency>
-
-        <!-- XML Path -->
-        <dependency>
-            <groupId>io.rest-assured</groupId>
-            <artifactId>xml-path</artifactId>
-            <version>${restassured.version}</version>
-        </dependency>
-
         <!-- Allure TestNG -->
         <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-testng</artifactId>
-            <version>${allure.version}</version>
-        </dependency>
-
-        <!-- Allure Rest Assured -->
-        <dependency>
-            <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-rest-assured</artifactId>
             <version>${allure.version}</version>
         </dependency>
 
@@ -148,65 +110,11 @@
             <version>${jackson.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-
         <!-- Faker Library -->
         <dependency>
             <groupId>com.github.javafaker</groupId>
             <artifactId>javafaker</artifactId>
             <version>${faker.version}</version>
-        </dependency>
-
-        <!-- JSON Path -->
-        <dependency>
-            <groupId>com.jayway.jsonpath</groupId>
-            <artifactId>json-path</artifactId>
-            <version>${json.path.version}</version>
-        </dependency>
-
-        <!-- WireMock for API mocking -->
-        <dependency>
-			<groupId>org.wiremock</groupId>
-			<artifactId>wiremock</artifactId>
-			<version>${wiremock.version}</version>
-			<scope>test</scope>
-		</dependency>
-
-        <!-- Awaitility for async testing -->
-        <dependency>
-            <groupId>org.awaitility</groupId>
-            <artifactId>awaitility</artifactId>
-            <version>${awaitility.version}</version>
-        </dependency>
-
-        <!-- Database Drivers -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>${postgresql.version}</version>
-        </dependency>
-
-        <!-- Apache POI for Excel -->
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>${apache.poi.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>${apache.poi.version}</version>
         </dependency>
 
         <!-- Commons IO -->
@@ -223,48 +131,6 @@
             <version>${gson.version}</version>
         </dependency>
 
-        <!-- Hamcrest -->
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest</artifactId>
-            <version>${hamcrest.version}</version>
-        </dependency>
-
-        <!-- DotEnv -->
-        <dependency>
-            <groupId>io.github.cdimascio</groupId>
-            <artifactId>dotenv-java</artifactId>
-            <version>${dotenv.version}</version>
-        </dependency>
-
-        <!-- OpenCSV for CSV file handling -->
-        <dependency>
-            <groupId>com.opencsv</groupId>
-            <artifactId>opencsv</artifactId>
-            <version>${opencsv.version}</version>
-        </dependency>
-
-        <!-- JSON Simple for JSON file handling -->
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>${json.simple.version}</version>
-        </dependency>
-
-        <!-- JSONAssert -->
-        <dependency>
-            <groupId>org.skyscreamer</groupId>
-            <artifactId>jsonassert</artifactId>
-            <version>1.5.1</version>
-        </dependency>
-
-        <!-- Jsoup for HTML parsing -->
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.17.1</version>
-        </dependency>
-
         <!-- Apache Commons Lang for utilities -->
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -272,12 +138,6 @@
             <version>3.14.0</version>
         </dependency>
 
-        <!-- Apache Commons Validator -->
-        <dependency>
-            <groupId>commons-validator</groupId>
-            <artifactId>commons-validator</artifactId>
-            <version>1.7</version>
-        </dependency>
     </dependencies>
 
     <build>
